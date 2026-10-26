@@ -1,79 +1,42 @@
-import mongoose from "mongoose";
+
 import express from "express";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import Feedback from "./models/Feedback.js";
+
+import feedbackRoutes from "./routes/feedbackRoutes.js";
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
+app.use(express.static("frontend"));
 
-const PORT = process.env.PORT || 3000;
+app.use("/api/feedback", feedbackRoutes);
 
-app.post("/feedback", async (req, res) => {
-
-    try {
-
-        const feedback = new Feedback(req.body);
-
-        await feedback.save();
-
-        res.status(201).json({
-            message: "Form is submitted successfully",
-            feedback: feedback
-        });
-
-    } catch (error) {
-
-        res.status(400).json({
-            message: "Failed to save the form",
-            error: error.message
-        });
-    }
+app.get("/", (req, res) => {
+    res.send("Student Feedback API is running");
 });
-
-
-app.get("/feedback", async (req, res) => {
-
-    try {
-
-        const feedback = await Feedback.find();
-
-        res.json(feedback);
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: "Failed to fetch the submitted feedback",
-            error: error.message
-        });
-    }
-});
-
 
 async function connectDB() {
-
     try {
-
         await mongoose.connect(process.env.MONGODB_URI);
-
         console.log("MongoDB connected successfully");
 
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
     } catch (error) {
-
-        console.log("Failed to connect MongoDB");
-        console.error(error);
+        console.error("MongoDB connection failed:", error);
+        process.exit(1);
     }
 }
-
 
 connectDB();
 
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+
 

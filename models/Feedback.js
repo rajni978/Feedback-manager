@@ -13,7 +13,6 @@ const feedbackSchema = new mongoose.Schema({
         required:true,
         min:1,
         max:5
-    
     },
 
     comments:{
@@ -21,11 +20,11 @@ const feedbackSchema = new mongoose.Schema({
         required:true,
         trim:true
     },
+
     createdAt:{
         type:Date,
         default:Date.now
     }
-
 });
 
 const Feedback = mongoose.model("Feedback",feedbackSchema);

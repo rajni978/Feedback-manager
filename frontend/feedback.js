@@ -7,16 +7,34 @@ async function loadFeedback() {
     try {
 
         const response =
-            await fetch("http://localhost:3000/feedback");
+            await fetch("http://localhost:3000/api/feedback");
+
+
+        const data =
+            await response.json();
+
+
+        console.log("Feedback response:", data);
 
 
         if (!response.ok) {
-            throw new Error("Failed to fetch feedback");
+
+            feedbackContainer.textContent =
+                data.message || "Failed to load feedback.";
+
+            return;
         }
 
 
-        const feedbacks =
-            await response.json();
+        const feedbacks = data.feedbacks;
+
+
+        console.log("Feedbacks:", feedbacks);
+
+        console.log(
+            "Is array?",
+            Array.isArray(feedbacks)
+        );
 
 
         if (feedbacks.length === 0) {
@@ -28,15 +46,12 @@ async function loadFeedback() {
         }
 
 
-        feedbackContainer.innerHTML = "";
-
-
         feedbacks.forEach((feedback) => {
 
-            const feedbackCard =
+            const card =
                 document.createElement("div");
 
-            feedbackCard.classList.add("feedback-card");
+            card.classList.add("feedback-card");
 
 
             const name =
@@ -60,25 +75,24 @@ async function loadFeedback() {
                 feedback.comments;
 
 
-            feedbackCard.appendChild(name);
+            card.appendChild(name);
 
-            feedbackCard.appendChild(rating);
+            card.appendChild(rating);
 
-            feedbackCard.appendChild(comments);
+            card.appendChild(comments);
 
 
-            feedbackContainer.appendChild(
-                feedbackCard
-            );
+            feedbackContainer.appendChild(card);
 
         });
 
+
     } catch (error) {
 
-        console.log("Error:", error);
+        console.error(error);
 
         feedbackContainer.textContent =
-            "Failed to load feedback.";
+            "Unable to connect to the server.";
 
     }
 

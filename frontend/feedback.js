@@ -7,7 +7,7 @@ async function loadFeedback() {
     try {
 
         const response =
-            await fetch("http://localhost:3000/api/feedback");
+            await fetch("https://feedback-manager-vvsl.onrender.com/api/feedback");
 
 
         const data =

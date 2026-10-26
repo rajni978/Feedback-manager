@@ -22,7 +22,7 @@ console.log("Sending feedback:", feedbackData);
 
 try{
     const response = await fetch(
-        "http://localhost:3000/api/feedback",
+        "https://feedback-manager-api.onrender.com/api/feedback",
         {
             method:"POST",
             headers:{
